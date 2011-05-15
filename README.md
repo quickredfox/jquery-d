@@ -78,6 +78,32 @@ if the case was as simple as above, you might need something more suited.
         value.public_timeline // collection of tweets
     })
 
+I also introduced a concept I call "negociators". A negociator is a function that 
+accepts a promise as it's sole argument and is duty-bound to either return a value 
+or a promise but never a function. A negociator is signed using $.negociate() which 
+returns a negociation promise. When the first callback of any type is attached to 
+the negociation promise it automaticall xecutes the negociator and returns a promise
+for the result. 
+
+This allows us to slip some logic into our promise collections like such:
+
+    loader.update = function(n){
+        console.log("Progress: "+n)
+        return this;
+    }
+    updates = 0;
+    var n1 = function(negociation){ return loader.show().update(++updates) }
+    var n2 = function(negociation){ return loader.update(++updates) }
+var promises = [
+        $.ajax( { url: 'http://api.twitter.com/...' } ),
+        $.D.negociate( n1 ),
+        $.ajax( { url: 'http://api.twitter.com/...' } ),
+        $.D.negociate( n2 ),
+        $.ajax( { url: 'http://api.twitter.com/...' } ),
+        $.D.negociate( n2 ),
+    ]
+
+
 Anyways, read along... or move along.
 
 ---
