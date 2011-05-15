@@ -1,0 +1,10 @@
+[
+    {
+        "to":"roger",
+        "content":"foo"
+    },
+    {
+        "to":"bob", 
+        "content":"bar"
+    }
+]

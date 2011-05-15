@@ -118,7 +118,13 @@
     
 ###
 
-$ = jQuery = require 'jquery'
+    
+isNode = typeof process isnt "undefined" and process.versions and !!process.versions.node
+
+if isNode
+    $ = jQuery = require 'jquery' 
+else 
+    $ = jQuery = window.jQuery
 D = (fn)->
     $.Deferred.call(this,fn)
 D::=$.Deferred::
@@ -448,5 +454,10 @@ D.timeout = (promise,time)->
         timed.rejectWith  null, arguments
     return timed.promise()
 
-$.D = module.exports = D
-$.D::=module.exports::=D::
+if isNode
+    $.D=module.exports=D
+    $.D::=module.exports::=D::
+else
+    $.D=D
+    $.D::=D::
+    
