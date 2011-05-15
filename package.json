@@ -1,0 +1,21 @@
+{
+  "author": "Francois Lafortune, quickredfox <code@quickredfox.at> (http://about.me/quickredfox)",
+  "name": "jquery-d",
+  "description": "exports \"D\" which proxies jQuery.Deferred adding a few utility methods to handle promises.",
+  "version": "0.0.1",
+  "main": "./lib/d.js",
+  "scripts": {
+    "test": "tests/d-test.js"
+  },
+  "engines": {
+    "node": "~v0.4.6"
+  },
+  "dependencies": {
+      "jquery": ">=1.6.1"
+  },
+  "devDependencies": {
+      "nodeunit": ">=0.5.1",
+      "coffee-script": ">=1.1.1",
+      "jake": ">=0.1.8"
+  }
+}
