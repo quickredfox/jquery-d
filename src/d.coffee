@@ -1,5 +1,5 @@
 ###
-    jQuery.D ( or "D" ) v0.0.1
+    jQuery.D ( or "D" ) v0.0.2
     ==========================
     
     Exports "D" or jQuery.D which "subclasses" jQuery.Deferred adding 
@@ -128,7 +128,7 @@ else
 D = (fn)->
     $.Deferred.call(this,fn)
 D::=$.Deferred::
-D.version = 'v0.0.1'
+D.version = 'v0.0.2'
 
 
 fargs = (args)-> Array::slice.call( args )

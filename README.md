@@ -1,5 +1,5 @@
 
-jQuery.D ( or "D" ) v0.0.1
+jQuery.D ( or "D" ) v0.0.2
 ==========================
 
 Exports "D" or jQuery.D which "subclasses" jQuery.Deferred adding 

@@ -2,7 +2,7 @@
   "author": "Francois Lafortune, quickredfox <code@quickredfox.at> (http://about.me/quickredfox)",
   "name": "jquery-d",
   "description": "exports \"D\" which proxies jQuery.Deferred adding a few utility methods to handle promises.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./lib/d.js",
   "scripts": {
     "test": "tests/d-test.js"
