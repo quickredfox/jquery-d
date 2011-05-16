@@ -138,7 +138,8 @@ coerce = (values)->
         if D.isPromise value
             return value
         else
-            return D().resolveWith( null, value ).promise()
+            return D().resolveWith( null, [ value ] ).promise()
+        
 
 pushValue = (values,value)->
     if typeof values is "undefined"
@@ -225,7 +226,10 @@ Negociator = (fn)->
     @param value {mixed} Value to validate
 ###    
 D.isPromise = (value)-> 
-    Boolean(value and value.promise and 'function' is typeof value.promise and value.promise().promise )   
+    ispromise  = value and  'function' is typeof value.promise
+    ispromise  = ispromise and 'function' is typeof value.done
+    ispromise  = ispromise and 'function' is typeof value.fail    
+    Boolean(ispromise)   
 
 ###
     D.isDeferred( value )
@@ -250,7 +254,10 @@ D.isDeferred = (value)->
 D.step = ( values )->
     values = coerce(values)
     operation = D()
-    sequence values, operation
+    try
+        sequence values, operation
+    catch E
+        operation.reject(E)
     return operation.promise()
     
 ###
@@ -391,10 +398,11 @@ D.rejected = (value)->
     
     @param values {Mixed} Something to be deeply resolved
 ###
+isEnum = (o)-> $.isPlainObject(o) or $.type(o) is 'array'
 D.deep = ( values )->
     operation = D()
     todo = []
-    if $.isPlainObject(values) or $.type(values) is 'array'
+    if isEnum( values )
         $.each values, (key, value)->
             if D.isPromise value
                 value.done (real)->
@@ -402,8 +410,10 @@ D.deep = ( values )->
                 value.fail (e)-> #operation.reject
                     values[key] = new Error "deep promise failed: #{e}"
                 todo.push value
-            else if $.isPlainObject(values) or $.type(values) is 'array'
+            else if isEnum( value )
                 todo.push D.deep(value)
+            else
+                values[key] = value
     D.through( todo ).then ()->
         operation.resolveWith null, [values]
     , (errors)->

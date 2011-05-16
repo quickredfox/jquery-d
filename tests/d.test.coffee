@@ -24,6 +24,23 @@ analyze = (msg,fn)->
     timeout: [Function] }
     
 ###
+analyze "D.through() should really go through every nasty thing", (test)->
+    test.expect(1)
+    nastythings = [
+        1
+        new TypeError('nasty')
+        false
+        null
+        0
+        { promise:()-> true }
+        -1
+    ]
+    D.through( nastythings ).then (values)->
+        test.deepEqual values, nastythings, 'all nasty things passed and faild!'
+        test.done()
+    , ()-> 
+        test.done()
+
 analyze "D.isDeferred should return a boolean stating if the passed in argument is a deferred response", (test)->
     test.expect 3
     test.ok D.isDeferred( D() ), 'should be deferred'
@@ -388,6 +405,27 @@ analyze "D.deep() should resolve everything resolvable (functions: see D.negocia
         test.done()
     , ()-> test.done()
     
+analyze "D.deep() should truly resolve very deeply", (test)->   
+    test.expect( 1 )
+    nested = {
+        foo:  D.delay( D.resolved('bar'), 3 )
+        baf:  D.delay( D.resolved('fee'), 3000 )
+    }
+    structure = { a: [ b: { c: { d: [ e: { f: { foo: 'bar', baf: 'fee' } } ] } } ] }
+    totest = [
+        { a: [ b: { c: { d: [ e: { f: D.deep( nested ) } ] } } ] }
+        D.deep(structure)
+    ]
+    expected= [
+        structure
+        structure
+    ]
+    D.deep( totest ).then (value)->
+        test.deepEqual value, expected, 'object is fully, deeply resolved'
+        test.done()
+    , ()-> test.done()
+        
+    
 analyze "D.deep() should fail when something is not resolvable", (test)->
     test.expect( 1 )
     toresolve = 
@@ -431,6 +469,8 @@ analyze "D.deep() should execute and resolve negociators and leave functions int
         test.done()
     step.fail ()-> test.done()
 
+
+        
 analyze "Assumes that jquery promises work the same as D promises", (test)->
     test.expect(1)
     jp = $.Deferred()
